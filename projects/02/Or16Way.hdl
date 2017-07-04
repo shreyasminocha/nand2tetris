@@ -1,0 +1,42 @@
+/**
+ * 16-way Or:
+ * out = (in[0] or in[1] or ... or in[7])
+ */
+
+CHIP Or16Way {
+    IN in[16];
+    OUT out;
+
+    PARTS:
+    Or(a=in[0], b=in[0], out=s1n0);
+    Or(a=in[1], b=in[1], out=s1n1);
+    Or(a=in[2], b=in[2], out=s1n2);
+    Or(a=in[3], b=in[3], out=s1n3);
+    Or(a=in[4], b=in[4], out=s1n4);
+    Or(a=in[5], b=in[5], out=s1n5);
+    Or(a=in[6], b=in[6], out=s1n6);
+    Or(a=in[7], b=in[7], out=s1n7);
+    Or(a=in[8], b=in[8], out=s1n8);
+    Or(a=in[9], b=in[9], out=s1n9);
+    Or(a=in[10], b=in[10], out=s1n10);
+    Or(a=in[11], b=in[11], out=s1n11);
+    Or(a=in[12], b=in[12], out=s1n12);
+    Or(a=in[13], b=in[13], out=s1n13);
+    Or(a=in[14], b=in[14], out=s1n14);
+    Or(a=in[15], b=in[15], out=s1n15);
+    Or(a=s1n0, b=s1n1, out=s2n0);
+    Or(a=s1n2, b=s1n3, out=s2n1);
+    Or(a=s1n4, b=s1n5, out=s2n2);
+    Or(a=s1n6, b=s1n7, out=s2n3);
+    Or(a=s1n8, b=s1n9, out=s2n4);
+    Or(a=s1n10, b=s1n11, out=s2n5);
+    Or(a=s1n12, b=s1n13, out=s2n6);
+    Or(a=s1n14, b=s1n15, out=s2n7);
+    Or(a=s2n0, b=s2n1, out=s3n0);
+    Or(a=s2n2, b=s2n3, out=s3n1);
+    Or(a=s2n4, b=s2n5, out=s3n2);
+    Or(a=s2n6, b=s2n7, out=s3n3);
+    Or(a=s3n0, b=s3n1, out=s4n0);
+    Or(a=s3n2, b=s3n3, out=s4n1);
+    Or(a=s4n0, b=s4n1, out=out);
+}

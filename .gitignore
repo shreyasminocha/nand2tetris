@@ -1,0 +1,37 @@
+.DS_Store
+chapters
+lectures
+presentations
+tools
+*.out
+*.zip
+*.cmp
+*.tst
+*.class
+*.ctxt
+package.bluej
+projects/Chipset API
+projects/demo
+projects/00
+projects/13
+projects/04/**/*.hack
+projects/05/**/*.hack
+projects/06/add
+projects/06/max
+projects/06/pong
+projects/06/rect
+projects/06/prog.txt
+projects/07/**/*.vm
+projects/07/**/*.asm
+projects/07/**/*.hack
+projects/08/**/*.vm
+projects/08/**/*.asm
+projects/08/**/*.hack
+projects/08/**/*.html
+
+# Ignore projects not yet complete
+
+projects/09
+projects/10
+projects/11
+projects/12
