@@ -1,6 +1,6 @@
 /**
  * 16-bit Negative Checker
- * out = 1 iff (in<0)
+ * out = 1 iff (in < 0)
  */
 
 CHIP NegCheck16 {
