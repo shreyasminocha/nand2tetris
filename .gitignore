@@ -36,6 +36,8 @@ projects/08/**/*.html
 
 # Ignore projects not yet complete
 
+projects/07
+projects/08
 projects/09
 projects/10
 projects/11
