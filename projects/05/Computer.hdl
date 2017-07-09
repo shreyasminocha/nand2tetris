@@ -15,6 +15,12 @@ CHIP Computer {
 
     PARTS:
     ROM32K(address=pcout, out=toinstruction);
-    CPU(inM=toinm, instruction=toinstruction, reset=reset, outM=tomemin, writeM=tomemload, addressM=tomemaddress, pc=pcout);
+    CPU(inM=toinm, 
+        instruction=toinstruction, 
+        reset=reset, 
+        outM=tomemin, 
+        writeM=tomemload, 
+        addressM=tomemaddress, 
+        pc=pcout);
     Memory(in=tomemin, load=tomemload, address=tomemaddress, out=toinm);
 }
