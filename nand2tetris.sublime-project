@@ -1,0 +1,24 @@
+{
+    "folders":
+    [
+        {
+            "path": ".",
+            "folder_exclude_patterns": [
+                "projects/demo", 
+                "projects/00", 
+                "projects/13", 
+                "chapters", 
+                "presentations", 
+                "lectures", 
+                "tools"
+            ],
+            "file_exclude_patterns": [
+                "*.out", 
+                "*.tst", 
+                "*.cmp",
+                "projects/04/*.hack",
+                "projects/05/*.hack"
+            ]
+        }
+    ]
+}

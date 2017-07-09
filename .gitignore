@@ -1,8 +1,11 @@
 .DS_Store
+*.sublime-workspace
+
 chapters
 lectures
 presentations
 tools
+
 *.out
 *.zip
 *.cmp
@@ -10,10 +13,12 @@ tools
 *.class
 *.ctxt
 package.bluej
+
 projects/Chipset API
 projects/demo
 projects/00
 projects/13
+
 projects/04/**/*.hack
 projects/05/**/*.hack
 projects/06/add
