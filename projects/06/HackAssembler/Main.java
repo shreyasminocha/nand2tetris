@@ -1,94 +1,121 @@
-import java.io.*;
-import java.lang.*;
-import java.util.regex.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class Main {
-    private String file;
-    private int pc = 0;
-    public Main(String fin) {
-        file = fin;
-    }
+/**
+ * Represent one of the three possible command types
+ */
+enum type {
+    A_COMMAND,
+    C_COMMAND,
+    L_COMMAND
+}
 
-    public void main() throws IOException, Exception {  
-        //CREATE INSTANCES OF OTHER MODULES
-        Parser fp = new Parser(file);
-        Parser sp = new Parser(file);
-        Code code = new Code();
-        HashMap<String, String> st = new HashMap<String, String>();
+/**
+ * Write the translated assembly language commands to a hack file.
+ */
+class Main {
+    private static String inputFile;
+    private static String outputFile;
+    private static int pc = 0;
 
-        //sYMBOL TABLE INITIALIZATION
-        st.put("R0", "0"); st.put("R1", "1"); st.put("R2", "2"); st.put("R3", "3"); st.put("R4", "4"); st.put("R5", "5"); st.put("R6", "6"); st.put("R7", "7");
-        st.put("R8", "8"); st.put("R9", "9"); st.put("R10", "10"); st.put("R11", "11"); st.put("R12", "12"); st.put("R13", "13"); st.put("R14", "14"); st.put("R15", "15");
-        st.put("SCREEN", "16384"); st.put("KBD", "24576");
-        st.put("SP", "0"); st.put("LCL", "1"); st.put("ARG", "2"); st.put("THIS", "3"); st.put("THAT", "4");
-
-        //FIRST PASS
-        fp.advance();
-        while(fp.command != null) {   
-            if(fp.commandType() == "L_COMMAND") {
-                st.put(fp.symbol(), Integer.toString(pc));
-                pc--;
-            }
-            fp.advance();
-            pc++;
-        }
-
-        //SECOND PASS
-        FileWriter writer = null;
-        int rAllocation = 16; //Keeps a record of the last register allocated to a variable.
-
-        try {
-            //CREATE FILE, FILE WRITER
-            File nf = new File(file.replaceAll("\\.asm", ".hack"));
-            nf.createNewFile();
-            writer = new FileWriter(nf);
-
-            //SECOND PASS
-            sp.advance();
-            while(sp.command != null) {
-                if(sp.commandType() == "L_COMMAND") {
-                    //Do nothing.
-                } else if(sp.commandType() == "A_COMMAND") {
-                    if(!(Pattern.compile("[a-zA-Z]").matcher(sp.symbol()).find())) { //If the symbol consists of only digits.
-                        writer.write(convertAddr(sp.symbol()) + "\n"); //Translate integer value to binary, write to file.
-                    } else if(st.get(sp.symbol()) == null){
-                        st.put(sp.symbol(), Integer.toString(rAllocation)); //Assign the variable an unoccupied register. 
-                        rAllocation++;
-                        writer.write(convertAddr(st.get(sp.symbol())) + "\n");  //Retrieve the just allocated value from SymbolTable, translate to binary, write.
-                    } else {
-                        writer.write(convertAddr(st.get(sp.symbol())) + "\n");  //Retrieve value of symbol from SymbolTable, translate to binary, write.
-                    }
-                } else if(sp.commandType() == "C_COMMAND") {
-                    String d = code.dest(sp.dest());
-                    String c = code.comp(sp.comp());
-                    String j = code.jump(sp.jump());
-
-                    writer.write("111" + c + d + j + "\n");
-                }
-                sp.advance();
-            }
-        } catch(IOException e) {
-            e.printStackTrace();
-        } finally {
-            //CLOSE WRITER
-            writer.flush();
-            writer.close();
-        }
-    }
-
-    public String convertAddr(String addr) throws Exception{
-        String bin;
-        String zeroPad = "";
-        if(addr != null) {
-            bin = Integer.toBinaryString(Integer.parseInt(addr));
-            for(int i = 0; i < (16 - bin.length()); i++) {
-                zeroPad += "0";
-            }
-            return zeroPad + bin; 
+    /**
+     * Accept input file path and write assembled code to output file
+     * @param  args        Command line arguments
+     * @throws IOException Error in reading the file
+     */
+    public static void main(String[] args) throws IOException {
+        inputFile  = args[0];
+        
+        if(args.length > 1) {
+            outputFile = args[1];
         } else {
-            throw new Exception("Null Parameter.");
+            outputFile = inputFile.replaceAll("\\.asm", ".hack");
         }
 
+        Parser fp = new Parser(inputFile); /** Parser for first pass */
+        Parser sp = new Parser(inputFile); /** Parser for second pass */
+        Code code = new Code();
+        HashMap<String, Integer> symbols = new HashMap<String, Integer>(); /** Symbol table **/
+
+        // initialize symbol table
+        for(int i = 0; i <= 15; i++) { symbols.put("R" + i, i); }
+        symbols.put("SCREEN", 16384);
+        symbols.put("KBD", 24576);
+        symbols.put("SP", 0);
+        symbols.put("LCL", 1);
+        symbols.put("ARG", 2);
+        symbols.put("THIS", 3);
+        symbols.put("THAT", 4);
+
+        // run the first pass
+        while(fp.command() != null) {
+            if(fp.commandType().equals(type.L_COMMAND)) {
+                symbols.put(fp.symbol(), pc);
+            } else {
+                pc++;
+            }
+
+            fp.advance();
+        }
+
+        // run the second pass
+        FileWriter writer;
+        int vacantRegister = 16; // last register allocated to a variable
+
+        File nf = new File(outputFile);
+        nf.createNewFile();
+        writer = new FileWriter(nf);
+
+        // run the second pass
+        while(sp.command() != null) {
+            type commandType = sp.commandType();
+            if(commandType.equals(type.A_COMMAND)) {
+                String symbol = sp.symbol();
+                // only digits
+                if(sp.symbol().matches("\\d+")) {
+                    writer.write(inBinary(Integer.parseInt(symbol))); // convert to binary, write
+                    writer.write("\n");
+                } else if(symbols.get(symbol) == null) {
+                    symbols.put(symbol, vacantRegister++);
+                    
+                    writer.write(inBinary(symbols.get(symbol)));
+                    writer.write("\n");
+                } else {
+                    writer.write(inBinary(symbols.get(symbol)));
+                    writer.write("\n");
+                }
+            } else if(commandType.equals(type.C_COMMAND)) {
+                String c = code.comp(sp.comp());
+                String d = code.dest(sp.dest());
+                String j = code.jump(sp.jump());
+
+                writer.write("111" + c + d + j);
+                writer.write("\n");
+            }
+            sp.advance();
+        }
+
+        writer.flush();
+        writer.close();
+    }
+
+    /**
+     * Convert supplied address to a 16-bit binary string
+     * @param  addr                     Address to convert to binary
+     * @return                          16-bit binary string
+     * @throws IllegalArgumentException Out of unsigned 16-bit range
+     */
+    private static String inBinary(int addr) throws IllegalArgumentException {
+        if(addr > 65535 || addr < 0) {
+            throw new IllegalArgumentException(addr + " not in range 0--65535");
+        }
+
+        String manyZeros = "000000000000000" + Integer.toBinaryString(addr);
+        return manyZeros.substring(manyZeros.length() - 16);
     }
 }
