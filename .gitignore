@@ -21,10 +21,7 @@ projects/13
 
 projects/04/**/*.hack
 projects/05/**/*.hack
-projects/06/add
-projects/06/max
-projects/06/pong
-projects/06/rect
+projects/06/**/*.hack
 projects/06/prog.txt
 projects/07/**/*.vm
 projects/07/**/*.asm
