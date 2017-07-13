@@ -11,18 +11,28 @@ import java.util.regex.Pattern;
  * parse it, and provide convenient access to the command’s components 
  * (fields and symbols). In addition, remove all white space and comments.
  */
-class Parser {
+public class Parser {
     private BufferedReader br;
     private String command;
 
     private static Pattern address = Pattern.compile("^@([\\w.$:]+)$");
     private static Pattern loop = Pattern.compile("^\\(([\\w.$:]+)\\)$");
-
+    
+    /**
+     * Open the input file/stream and prepare to parse it
+     * @param  file        Path of the file to parse
+     * @throws IOException Error encountered in attempting to read file
+     */
     public Parser(String file) throws IOException {
         br = new BufferedReader(new FileReader(file));
-        advance();
+        advance(); // load the first command so the user needs to
     }
 
+    /**
+     * Read the next command from the input and makes it the current command. If
+     * no next command exists, set the current command to <code>null</code>.
+     * @throws IOException Error accessing the file
+     */
     public void advance() throws IOException {
         String line;
         while(true) {
@@ -42,6 +52,17 @@ class Parser {
         }
     }
 
+    /**
+     * Returns the type of the current command:
+     *  <ul>
+     *      <li> <code>A_COMMAND</code> for <code>@Xxx</code> where <code>Xxx</code> 
+     *      is either a symbol or a decimal number</li>
+     *      <li> <code>C_COMMAND</code> for <code>dest=comp;jump</code> </li>
+     *      <li> <code>L_COMMAND</code> (actually, pseudo-command) for <code>(Xxx)</code> 
+     *      where <code>Xxx</code> is a symbol.</li>
+     *  </ul>
+     * @return The command type
+     */
     public type commandType() {
         if(command.charAt(0) == '(') {
             return type.L_COMMAND;
@@ -52,6 +73,13 @@ class Parser {
         }
      }
 
+     /**
+      * Return the symbol or decimal <code>Xxx</code> of the current command 
+      * <code>@Xxx</code> or <code>(Xxx)</code>. Should be called only when the 
+      * commond is a valid A command or L command.
+      * @return The symbol portion
+      * @throws IllegalStateException The command is not a valid A or C command
+      */
     public String symbol() throws IllegalStateException {
         Matcher addrMatcher = address.matcher(command);
         Matcher loopMatcher = loop.matcher(command);
@@ -65,7 +93,17 @@ class Parser {
         }
     }
 
-    public String comp() {
+    /**
+     * Return the computation mnemonic of the current command. Should be called
+     * only when the command is a valid C command.
+     * @return The computation mnemonic
+     * @throws IllegalStateException the command is not a valid C command
+     */
+    public String comp() throws IllegalStateException {
+        if(commandType() != type.C_COMMAND) {
+            throw new IllegalStateException();
+        }
+        
         if(command.contains("=") && command.contains(";")) {
             return command.split("=")[1].split(";")[0];
         } else if(command.contains("=")) {
@@ -77,7 +115,17 @@ class Parser {
         }
     }
 
-    public String dest(){
+    /**
+     * Returns the destination mnemonic of the current command. Should be called
+     * only when the command is a valid C command.
+     * @return The destination mnemonic
+     * @throws IllegalStateException The command is not a valid C command
+     */
+    public String dest() throws IllegalStateException {
+        if(commandType() != type.C_COMMAND) {
+            throw new IllegalStateException();
+        }
+        
         if(command.contains("=")) {
             return command.split("=")[0];
         } else {
@@ -85,7 +133,17 @@ class Parser {
         }
     }
 
-    public String jump() {
+    /**
+     * Return the jump mnemonic of the current command. Should be called
+     * only when the command is a valid C command.
+     * @return The jump mnemonic
+     * @throws IllegalStateException The command is not a valid C command
+     */
+    public String jump() throws IllegalStateException {
+        if(commandType() != type.C_COMMAND) {
+            throw new IllegalStateException();
+        }
+        
         if(command.contains(";")) {
             return command.split(";")[1];
         } else {
@@ -93,7 +151,11 @@ class Parser {
         }
     }
 
-    public String command() {
-        return command;
+    /**
+     * Whether the file has no more commands
+     * @return <code>true</code> if no commands remain and vice-versa
+     */
+    public boolean endOfFile() {
+        return command == null;
     }
 }

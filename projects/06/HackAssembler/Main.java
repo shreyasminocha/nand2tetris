@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Represent one of the three possible command types
+ * Represent the three possible command types
  */
 enum type {
     A_COMMAND,
@@ -18,7 +18,7 @@ enum type {
 /**
  * Write the translated assembly language commands to a hack file.
  */
-class Main {
+public class Main {
     private static String inputFile;
     private static String outputFile;
     private static int pc = 0;
@@ -53,7 +53,7 @@ class Main {
         symbols.put("THAT", 4);
 
         // run the first pass
-        while(fp.command() != null) {
+        while(!fp.endOfFile()) {
             if(fp.commandType().equals(type.L_COMMAND)) {
                 symbols.put(fp.symbol(), pc);
             } else {
@@ -65,14 +65,14 @@ class Main {
 
         // run the second pass
         FileWriter writer;
-        int vacantRegister = 16; // last register allocated to a variable
+        int vacantRegister = 16; // last unallocated register
 
         File nf = new File(outputFile);
         nf.createNewFile();
         writer = new FileWriter(nf);
 
         // run the second pass
-        while(sp.command() != null) {
+        while(!sp.endOfFile()) {
             type commandType = sp.commandType();
             if(commandType.equals(type.A_COMMAND)) {
                 String symbol = sp.symbol();

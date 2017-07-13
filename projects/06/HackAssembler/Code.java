@@ -3,7 +3,7 @@ import java.util.HashMap;
 /** 
  * Translate Hack assembly language mnemonics into binary codes.
  */
-class Code {
+public class Code {
     private HashMap<String, String> cMap = new HashMap<String, String>();
 
     public Code() {
