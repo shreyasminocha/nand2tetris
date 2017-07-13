@@ -13,6 +13,9 @@ GREEN="\033[0;32m"
 for file in "${@:3}"; do
     extless="${file%.asm}"
     
+    # delete existing assembled files so that test results are genuine
+    rm -f "$extless".hack "$extless"Control.hack "$extless"Experiment.hack
+    
     "$builtInAssembler" "$file" > /dev/null
     if [[ "$?" ]]; then
         echo [builtin assembler] ${CYAN}"$file"${NC}
