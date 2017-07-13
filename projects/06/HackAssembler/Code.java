@@ -7,7 +7,7 @@ public class Code {
     private HashMap<String, String> cMap = new HashMap<String, String>();
 
     public Code() {
-        // populate the comp symbol table
+        // populate the computation symbol table
         cMap.put("0", "0101010"); cMap.put("1", "0111111"); cMap.put("-1", "0111010");
         cMap.put("D", "0001100"); cMap.put("A", "0110000"); cMap.put("M", "1110000");
         cMap.put("!D", "0001101"); cMap.put("!A", "0110001"); cMap.put("!M", "1110001");
@@ -22,7 +22,7 @@ public class Code {
     }
 
     /**
-     * Convert the dest portion to its binary equivalent
+     * Convert the dest portion to its binary equivalent.
      * @param  destPortion The destination portion of the command
      * @return             Binary equivalent of the destination
      */
@@ -52,7 +52,7 @@ public class Code {
     }
 
     /**
-     * Convert the comp portion to its binary equivalent
+     * Convert the comp portion to its binary equivalent.
      * @param  compPortion The computation portion of the command
      * @return             Binary equivalent of the computation
      */
@@ -60,11 +60,12 @@ public class Code {
         if(cMap.get(compPortion) == null) {
             throw new IllegalArgumentException();
         }
+        
         return cMap.get(compPortion);
     }
 
     /**
-     * Convert the jump portion to its binary equivalent
+     * Convert the jump portion to its binary equivalent.
      * @param  jumpPortion The jump portion of the command
      * @return             Binary equivalent of the jump condition
      */

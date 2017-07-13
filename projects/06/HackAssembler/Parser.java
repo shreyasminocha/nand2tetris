@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * (fields and symbols). In addition, remove all white space and comments.
  */
 public class Parser {
-    private BufferedReader br;
+    private BufferedReader reader;
     private String command;
 
     private static Pattern address = Pattern.compile("^@([\\w.$:]+)$");
@@ -23,7 +23,7 @@ public class Parser {
      * @throws IOException Error encountered in attempting to read file
      */
     public Parser(String file) throws IOException {
-        br = new BufferedReader(new FileReader(file));
+        reader = new BufferedReader(new FileReader(file));
         advance(); // load the first command so the user needs to
     }
 
@@ -34,10 +34,11 @@ public class Parser {
      */
     public void advance() throws IOException {
         String line;
+        
         while(true) {
-            line = br.readLine();
+            line = reader.readLine();
             if(line == null) {
-                br.close();
+                reader.close();
                 command = null;
                 break;
             }
