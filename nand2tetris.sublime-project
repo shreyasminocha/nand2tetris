@@ -10,7 +10,8 @@
                 "chapters", 
                 "presentations", 
                 "lectures", 
-                "tools"
+                "tools",
+                "software manuals"
             ],
             "file_exclude_patterns": [
                 "*.out", 
