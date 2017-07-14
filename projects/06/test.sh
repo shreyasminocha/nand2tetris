@@ -20,19 +20,24 @@ for file in "${@:3}"; do
     rm -f "$extless".hack "$extless"Control.hack "$extless"Experiment.hack
     
     "$built_in_assembler" "$file" > /dev/null
-    if [[ "$?" -eq 0 ]]; then
+    
+    if [[ "$?" -eq 0 ]]; then # if file was successfully compiled
+        mv "$extless".hack "$extless"Control.hack
         echo [builtin assembler] Assembled ${CYAN}"$file"${NC}
     fi
-    mv "$extless".hack "$extless"Control.hack
-    
     
     "$my_assembler" "$file" "$extless"Experiment.hack > /dev/null
-    if [[ "$?" -eq 0 ]]; then
-        echo [your assembler] Assembled ${CYAN}"$file"${NC}
+    
+    if [[ "$?" -eq 0 ]]; then # if file was successfully compiled
+        echo [my assembler]"      "Assembled ${CYAN}"$file"${NC}
     fi
     
-    diff -w "$extless"Control.hack "$extless"Experiment.hack
-    if [[ "$?" -eq 0 ]]; then
-        echo " ➜" ${GREEN}"files matched!"${NC}
+    if [[ (-f "$extless"Control.hack) && ("$extless"Experiment.hack) ]]; then
+        diff -w "$extless"Control.hack "$extless"Experiment.hack
+        
+        if [[ "$?" -eq 0 ]]; then
+            echo " ➜" ${GREEN}"assembled files match!"${NC}
+        fi
     fi
+    
 done
