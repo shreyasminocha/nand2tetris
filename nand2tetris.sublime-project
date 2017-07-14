@@ -16,8 +16,10 @@
                 "*.out", 
                 "*.tst", 
                 "*.cmp",
+                "*.txt",
                 "projects/04/*.hack",
-                "projects/05/*.hack"
+                "projects/05/*.hack",
+                "projects/06/*.hack"
             ]
         }
     ]

@@ -1,10 +1,13 @@
 # USAGE:
-# ./test.sh [PATH TO BUILT IN ASSEMBLER] [PATH TO YOUR ASSEMBLER'S DIRECTORY] [ASM FILES TO TEST]
+# ./test.sh 
+#     [PATH TO BUILT IN ASSEMBLER'S EXECUTABLE]
+#     [PATH TO YOUR ASSEMBLER'S EXECUTABLE]
+#     [ASM FILES TO TEST]
 
 args=("$@")
 
-builtInAssembler=${args[0]} # path to the builtin assembler shell script
-myAssembler=${args[1]} # path to the assembler directory
+built_in_assembler=${args[0]} # path to the builtin assembler shell script
+my_assembler=${args[1]} # path to the assembler directory
 
 NC="\033[0m" # terminate coloured output
 CYAN="\033[0;36m"
@@ -16,21 +19,20 @@ for file in "${@:3}"; do
     # delete existing assembled files so that test results are genuine
     rm -f "$extless".hack "$extless"Control.hack "$extless"Experiment.hack
     
-    "$builtInAssembler" "$file" > /dev/null
-    if [[ "$?" ]]; then
-        echo [builtin assembler] ${CYAN}"$file"${NC}
+    "$built_in_assembler" "$file" > /dev/null
+    if [[ "$?" -eq 0 ]]; then
+        echo [builtin assembler] Assembled ${CYAN}"$file"${NC}
     fi
     mv "$extless".hack "$extless"Control.hack
     
     
-    java -cp "$myAssembler" Main "$file"
-    if [[ "$?" ]]; then
-        echo [your assembler] ${CYAN}"$file"${NC}
+    "$my_assembler" "$file" "$extless"Experiment.hack > /dev/null
+    if [[ "$?" -eq 0 ]]; then
+        echo [your assembler] Assembled ${CYAN}"$file"${NC}
     fi
-    mv "$extless".hack "$extless"Experiment.hack
     
     diff -w "$extless"Control.hack "$extless"Experiment.hack
-    if [[ "$?" ]]; then
+    if [[ "$?" -eq 0 ]]; then
         echo " ➜" ${GREEN}"files matched!"${NC}
     fi
 done
