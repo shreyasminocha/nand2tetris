@@ -13,3 +13,10 @@ ln -s myassembler.sh [PATH TO BINARIES]/assembler
 ```bash
 assembler --help
 ```
+
+## Running tests
+
+```bash
+cd path/to/project/06
+./test.sh [PATH TO BUILT-IN ASSEMBLER] HackAssembler/assembler.sh */**/*.asm
+```
