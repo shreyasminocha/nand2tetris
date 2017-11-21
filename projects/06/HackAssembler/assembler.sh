@@ -1,4 +1,9 @@
 #!/usr/bin/env sh
+#
+# USAGE:
+# ./assembler.sh
+#     [PATH TO INPUT FILE]
+#     [PATH TO OUTPUT FILE]
 
 # User's CDPATH can interfere with cd in this script
 unset CDPATH
@@ -7,7 +12,7 @@ script="`test -L "$0" && readlink -n "$0" || echo "$0"`"
 dir="$PWD"
 cd "`dirname "$script"`"
 
-if [[ ( "$#" -gt 2 ) || ( "$1" = "-h" ) || ( "$1" = "--help" ) ]] 
+if [[ ( "$#" -gt 2 ) || ( "$1" = "-h" ) || ( "$1" = "--help" ) ]]
 then
 	echo "Usage:"
 	echo "    `basename "$0"` FILE[.asm]                 Assembles FILE.asm to FILE.hack."
@@ -21,7 +26,7 @@ then
 	else
 		arg1="${dir}/$1"
 	fi
-	
+
 	echo Assembling "$arg1"
 	java -classpath "${CLASSPATH}" Main "$arg1"
 else
@@ -31,14 +36,14 @@ else
 	else
 		arg1="${dir}/$1"
 	fi
-	
+
 	if [[ `echo "$2" | sed -e "s/\(.\).*/\1/"` = / ]]
 	then
 		arg2="$2"
 	else
 		arg2="${dir}/$2"
 	fi
-	
+
 	echo Assembling "$arg1" to "$arg2"
-	java -classpath "${CLASSPATH}" Main "$arg1" "$arg2"	
+	java -classpath "${CLASSPATH}" Main "$arg1" "$arg2"
 fi

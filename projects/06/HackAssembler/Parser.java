@@ -6,17 +6,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Encapsulate access to the input code. Read an assembly language command, 
- * parse it, and provide convenient access to the command’s components 
+ * Encapsulate access to the input code. Read an assembly language command,
+ * parse it, and provide convenient access to the command’s components
  * (fields and symbols). In addition, remove all white space and comments.
  */
-public class Parser {
+class Parser {
     private BufferedReader reader;
     private String command;
 
-    private static Pattern address = Pattern.compile("^@([\\w.$:]+)$");
-    private static Pattern loop = Pattern.compile("^\\(([\\w.$:]+)\\)$");
-    
+    private static Pattern addressPattern = Pattern.compile("^@([\\w.$:]+)$");
+    private static Pattern loopPattern    = Pattern.compile("^\\(([\\w.$:]+)\\)$");
+
     /**
      * Open the input file/stream and prepare to parse it
      * @param  file        Path of the file to parse
@@ -24,70 +24,68 @@ public class Parser {
      */
     public Parser(String file) throws IOException {
         reader = new BufferedReader(new FileReader(file));
-        advance(); // load the first command so the user needs to
+        advance();
     }
 
     /**
      * Read the next command from the input and makes it the current command. If
-     * no next command exists, set the current command to <code>null</code>.
+     * no next command exists, set the current command to `null`.
      * @throws IOException Error accessing the file
      */
     public void advance() throws IOException {
         String line;
-        
-        while(true) {
+
+        // keep reading lines till one that is not entirely whitespace/comments is found
+        do {
             line = reader.readLine();
+
             if(line == null) {
                 reader.close();
-                command = null;
                 break;
             }
 
             line = line.replaceAll("\\s", "").replaceAll("//.*", "");
+        } while(line.length() == 0);
 
-            if(line.length() > 0) {
-                command = line;
-                break;
-            }
-        }
+        command = line;
     }
 
     /**
      * Returns the type of the current command:
      *  <ul>
-     *      <li> <code>A_COMMAND</code> for <code>@Xxx</code> where <code>Xxx</code> 
-     *      is either a symbol or a decimal number</li>
-     *      <li> <code>C_COMMAND</code> for <code>dest=comp;jump</code> </li>
-     *      <li> <code>L_COMMAND</code> (actually, pseudo-command) for <code>(Xxx)</code> 
-     *      where <code>Xxx</code> is a symbol.</li>
+     *      <li> `A_COMMAND` for `@xxx` where `xxx` is either a symbol or a decimal number</li>
+     *      <li> `C_COMMAND` for `dest=comp;jump`</li>
+     *      <li> `L_COMMAND` for `(xxx)` where `xxx` is a symbol.</li>
      *  </ul>
      * @return The command type
      */
     public type commandType() {
-        if(command.charAt(0) == '(') {
+        Matcher addrM = addressPattern.matcher(command);
+        Matcher loopM = loopPattern.matcher(command);
+
+        if(loopM.matches()) {
             return type.L_COMMAND;
-        } else if(command.charAt(0) == '@') {
+        } else if(addrM.matches()) {
             return type.A_COMMAND;
-        } else {
+        } else { // perhaps add a check for this as well
             return type.C_COMMAND;
         }
      }
 
      /**
-      * Return the symbol or decimal <code>Xxx</code> of the current command 
-      * <code>@Xxx</code> or <code>(Xxx)</code>. Should be called only when the 
-      * commond is a valid A command or L command.
+      * Return the symbol or decimal `xxx` of the current command
+      * `@xxx` or `(xxx)`. Should be called only when the commond is a valid 'A command' or 'L command'.
       * @return The symbol portion
       * @throws IllegalStateException The command is not a valid A or C command
       */
     public String symbol() throws IllegalStateException {
-        Matcher addrMatcher = address.matcher(command);
-        Matcher loopMatcher = loop.matcher(command);
-        
-        if(addrMatcher.matches()) {
-            return addrMatcher.group(1);
-        } else if(loopMatcher.matches()) {
-            return loopMatcher.group(1);
+        Matcher addrM = addressPattern.matcher(command);
+        Matcher loopM = loopPattern.matcher(command);
+
+        if(addrM.matches()) {
+            return addrM.group(1);
+        } else if(loopM.matches()) {
+            return loopM.group(1);
         } else {
             throw new IllegalStateException();
         }
@@ -103,7 +101,7 @@ public class Parser {
         if(commandType() != type.C_COMMAND) {
             throw new IllegalStateException();
         }
-        
+
         if(command.contains("=") && command.contains(";")) {
             return command.split("=")[1].split(";")[0];
         } else if(command.contains("=")) {
@@ -125,11 +123,11 @@ public class Parser {
         if(commandType() != type.C_COMMAND) {
             throw new IllegalStateException();
         }
-        
+
         if(command.contains("=")) {
             return command.split("=")[0];
         } else {
-            return null;
+            return "";
         }
     }
 
@@ -143,19 +141,19 @@ public class Parser {
         if(commandType() != type.C_COMMAND) {
             throw new IllegalStateException();
         }
-        
+
         if(command.contains(";")) {
             return command.split(";")[1];
         } else {
-            return null;
+            return "";
         }
     }
 
     /**
      * Whether the file has no more commands
-     * @return <code>true</code> if no commands remain and vice-versa
+     * @return `true` if no commands remain and vice-versa
      */
-    public boolean endOfFile() {
-        return command == null;
+    public boolean isNotOver() {
+        return command != null;
     }
 }
