@@ -1,4 +1,3 @@
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -6,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Scanner;
 
 /**
  * Translate assembly language commands and write them to a hack file.
@@ -19,15 +19,15 @@ public class Main {
      * @param  args        Command line arguments
      * @throws IOException Error in reading the file
      */
-    public static void main(String[] args) throws IOException, Exception {
+    public static void main(String[] args) throws IOException {
         //////////////////
         // handle files //
         //////////////////
 
         if(args.length < 1) {
-            BufferedReader ui = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("Please enter the path of the file to be converted: ");
-            inputPath = ui.readLine();
+            Scanner ui = new Scanner(System.in);
+            System.out.print("Please enter the path of the file to be converted: ");
+            inputPath = ui.nextLine();
         } else {
             inputPath = args[0];
         }
@@ -37,7 +37,7 @@ public class Main {
         String name = inputPath.substring(0, dot);
 
         if(!extension.equals("asm")) {
-            throw new Exception("The input file should have a '.asm' extension");
+            throw new IOException("The input file should have a '.asm' extension");
         }
 
         if(args.length > 1) {
@@ -100,24 +100,34 @@ public class Main {
                 if(symbol.matches("\\d+")) { // address
 
                     int address = Integer.parseInt(symbol);
-                    String binary = inBinary(address);
+                    writer.println(inBinary(address));
 
-                    writer.println(binary);
+                } else if(symbols.containsKey(symbol)) { // predefined symbol or label
 
-                } else if(symbols.get(symbol) == null) { // variable
+                    writer.println(inBinary(symbols.get(symbol)));
+
+                } else { // variable
 
                     symbols.put(symbol, unallocatedRegister++);
                     writer.println(inBinary(symbols.get(symbol)));
 
-                } else { // predefined symbol or label
-
-                    writer.println(inBinary(symbols.get(symbol)));
-
                 }
             } else if(commandType == type.C_COMMAND) { // dest=comp;jump
-                String comp = code.comp(secondPass.comp());
-                String dest = code.dest(secondPass.dest());
-                String jump = code.jump(secondPass.jump());
+                String comp, dest, jump;
+
+                try {
+                    comp = code.comp(secondPass.comp());
+                    dest = code.dest(secondPass.dest());
+                    jump = code.jump(secondPass.jump());
+                } catch(IllegalArgumentException exception) {
+                    syntaxError(secondPass.lineNumber(),
+                                secondPass.command(),
+                                "Invalid C_COMMAND: " + exception.getMessage());
+
+                    writer.close();
+                    outputFile.delete();
+                    return;
+                }
 
                 // [111] + [ccccccc] + [ddd] + [jjj]
                 writer.println("111" + comp + dest + jump);
@@ -125,8 +135,8 @@ public class Main {
 
             secondPass.advance();
         }
-        
-        System.out.println("\nThe file has successfully been converted to: " + outputPath);
+
+        System.out.println("The file has successfully been converted to: " + outputPath);
         writer.close();
     }
 
@@ -140,5 +150,17 @@ public class Main {
         String manyZeros = "000000000000000" + binary;
 
         return manyZeros.substring(manyZeros.length() - 16);
+    }
+
+    /**
+     * Inform the user that a syntax error was encountered.
+     * @param lineNumber The line number at which the error was encountered
+     * @param line       The erraneous line
+     * @param message    A description of the error
+     */
+    private static void syntaxError(int lineNumber, String line, String message) {
+        System.out.println("Invalid syntax at line number " + lineNumber + ", '" + line + "'");
+        System.out.println(message);
+        System.out.println("Conversion aborted.");
     }
 }

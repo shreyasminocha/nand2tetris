@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 class Parser {
     private BufferedReader reader;
     private String command;
+    private int lineNumber;
 
     private static Pattern addressPattern = Pattern.compile("^@([\\w.$:]+)$");
     private static Pattern loopPattern    = Pattern.compile("^\\(([\\w.$:]+)\\)$");
@@ -44,6 +45,7 @@ class Parser {
                 break;
             }
 
+            lineNumber++;
             line = line.replaceAll("\\s", "").replaceAll("//.*", "");
         } while(line.length() == 0);
 
@@ -51,7 +53,23 @@ class Parser {
     }
 
     /**
-     * Returns the type of the current command:
+     * Return the most recent command
+     * @return The command
+     */
+    public String command() {
+        if(!isNotOver()) {
+            throw new IllegalStateException("All commands have already been read.");
+        }
+
+        return command;
+    }
+
+    public int lineNumber() {
+        return lineNumber;
+    }
+
+    /**
+     * Return the type of the current command:
      *  <ul>
      *      <li> `A_COMMAND` for `@xxx` where `xxx` is either a symbol or a decimal number</li>
      *      <li> `C_COMMAND` for `dest=comp;jump`</li>
@@ -78,7 +96,7 @@ class Parser {
       * @return The symbol portion
       * @throws IllegalStateException The command is not a valid A or C command
       */
-    public String symbol() throws IllegalStateException {
+    public String symbol() {
         Matcher addrM = addressPattern.matcher(command);
         Matcher loopM = loopPattern.matcher(command);
 
@@ -97,7 +115,7 @@ class Parser {
      * @return The computation mnemonic
      * @throws IllegalStateException the command is not a valid C command
      */
-    public String comp() throws IllegalStateException {
+    public String comp() {
         if(commandType() != type.C_COMMAND) {
             throw new IllegalStateException();
         }
@@ -119,7 +137,7 @@ class Parser {
      * @return The destination mnemonic
      * @throws IllegalStateException The command is not a valid C command
      */
-    public String dest() throws IllegalStateException {
+    public String dest() {
         if(commandType() != type.C_COMMAND) {
             throw new IllegalStateException();
         }
@@ -137,7 +155,7 @@ class Parser {
      * @return The jump mnemonic
      * @throws IllegalStateException The command is not a valid C command
      */
-    public String jump() throws IllegalStateException {
+    public String jump() {
         if(commandType() != type.C_COMMAND) {
             throw new IllegalStateException();
         }

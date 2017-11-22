@@ -27,8 +27,8 @@ class Code {
      * @return             Binary equivalent of the computation
      */
     public String comp(String compPortion) {
-        if(cMap.get(compPortion) == null) {
-            throw new IllegalArgumentException();
+        if(!cMap.containsKey(compPortion)) {
+            throw new IllegalArgumentException("invalid comp portion '" + compPortion + "'");
         }
 
         return cMap.get(compPortion);
@@ -58,7 +58,7 @@ class Code {
             case "AMD":
                 return "111";
             default:
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("invalid dest portion '" + destPortion + "'");
         }
     }
 
@@ -86,7 +86,7 @@ class Code {
             case "JMP":
                 return "111";
             default:
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("invalid jump portion '" + jumpPortion + "'");
         }
     }
 }
