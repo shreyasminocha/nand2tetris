@@ -104,7 +104,7 @@ public class Main {
 
                     writer.println(binary);
 
-                } else if(symbols.get(symbol) != null) { // variable
+                } else if(symbols.get(symbol) == null) { // variable
 
                     symbols.put(symbol, unallocatedRegister++);
                     writer.println(inBinary(symbols.get(symbol)));
