@@ -2,6 +2,11 @@
 
 Implementation of the projects described in [The Elements of Computing Systems](//nand2tetris.org) and in nand2tetris [part 1](//coursera.org/learn/build-a-computer) and [part 2](//coursera.org/learn/nand2tetris2) on Coursera.
 
+**DISCLAIMER: Looking through someone else's solutions spoils the fun. Please look through these only once you have solved the problems yourself.**
+
+## License
+
+[GNU General Public License v3.0](//tldrlegal.com/license/gnu-general-public-license-v3-(gpl-3)). See `license` in the root of this repository.
 
 ## Project 01
 
@@ -74,4 +79,3 @@ Described [here](//nand2tetris.org/05.php) and in `projects/05/readme.md`.
 Write an assembler in a language of one's choice to convert the described assembly language to binary code as described by the specification [here](//nand2tetris.org/06.php).
 
 Find usage instructions in `projects/06/readme.md` and documentation in `projects/06/HackAssembler/docs`.
-
