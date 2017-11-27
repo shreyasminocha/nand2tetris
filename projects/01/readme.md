@@ -52,7 +52,7 @@ OUT out;
 out = not a == b
 ```
 
-- Multiplexor
+- Multiplexer
 
 ```c++
 IN a, b, sel;
@@ -66,7 +66,7 @@ else if set == 1
     out = b
 ```
 
-- Demultiplexor
+- Demultiplexer
 
 ```c++
 IN in, sel;
@@ -116,7 +116,7 @@ for i = 0..15:
     out[i] = (a[i] or b[i])
 ```
 
-- 16-bit Multiplexor
+- 16-bit Multiplexer
 
 ```c++
 IN a[16], b[16], sel;
@@ -131,6 +131,11 @@ for i = 0..15:
         out[i] = b[i]
 ```
 
+sel | out
+--- | ---
+  0 |   a
+  1 |   b
+
 - 8-way OR
 
 ```c++
@@ -142,7 +147,7 @@ OUT out;
 out = (in[0] or in[1] or ... or in[7])
 ```
 
-- 4-way 16-bit Multiplexor
+- 4-way 16-bit Multiplexer
 
 ```c++
 IN a[16], b[16], c[16], d[16], sel[2];
@@ -160,7 +165,14 @@ else if sel == 11
     out = d
 ```
 
-- 8-way 16-bit Multiplexor
+sel | out
+--- | ---
+ 00 |   a
+ 01 |   b
+ 10 |   c
+ 11 |   d
+
+- 8-way 16-bit Multiplexer
 
 ```c++
 IN a[16], b[16], c[16], d[16],
@@ -181,7 +193,18 @@ else if sel == 111
     out = h
 ```
 
-- 4-way dDemultiplexor
+sel | out
+--- | ---
+000 |   a
+001 |   b
+010 |   c
+011 |   d
+100 |   e
+101 |   f
+110 |   g
+111 |   h
+
+- 4-way Demultiplexer
 
 ```c++
 IN in, sel[2];
@@ -199,7 +222,7 @@ else if sel == 00
     {a, b, c, d} = {0, 0, 0, in}
 ```
 
-- 8-way Demultiplexor
+- 8-way Demultiplexer
 
 ```c++
 IN in[8];
