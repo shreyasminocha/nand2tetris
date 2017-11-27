@@ -6,7 +6,7 @@ Implementation of the projects described in [The Elements of Computing Systems]
 
 ## License
 
-[GNU General Public License v3.0](//tldrlegal.com/license/gnu-general-public-license-v3-(gpl-3)). See `license` in the root of this repository.
+GNU General Public License v3.0. See `license` in the root of this repository.
 
 ## Project 01
 
@@ -61,7 +61,7 @@ Described [here](//nand2tetris.org/03.php) and in `projects/03/readme.md`.
 
 Write `Mult.asm` and `Fill.asm` to familiarize oneself with the assembly language.
 
-Described [here](//nand2tetris.org/02.php).
+Described [here](//nand2tetris.org/04.php).
 
 
 ## Project 05
