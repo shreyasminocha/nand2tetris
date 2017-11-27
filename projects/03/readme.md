@@ -41,7 +41,7 @@ for ever
 
 - 8-register RAM
 
-Memory of 8 registers, each 16 bit-wide. 
+Memory of 8 16 bit registers. 
 
 ```c++
 IN in[16], load, address[3];
@@ -50,7 +50,7 @@ OUT out[16];
 
 - 64-register RAM
 
-Memory of 64 registers, each 16 bit-wide. 
+Memory of 64 16 bit registers. 
 
 ```c++
 IN in[16], load, address[6];
@@ -59,7 +59,7 @@ OUT out[16];
 
 - 512-register RAM
 
-Memory of 512 registers, each 16 bit-wide. 
+Memory of 512 16 bit registers. 
 
 ```c++
 IN in[16], load, address[9];
@@ -68,7 +68,7 @@ OUT out[16];
 
 - 4K RAM
 
-Memory of 4096 registers, each 16 bit-wide. 
+Memory of 4096 16 bit registers. 
 
 ```c++
 IN in[16], load, address[12];
@@ -77,7 +77,7 @@ OUT out[16];
 
 - 16K RAM
 
-Memory of 16384 registers, each 16 bit-wide. 
+Memory of 16384 16 bit registers. 
 
 ```c++
 IN in[16], load, address[14];
