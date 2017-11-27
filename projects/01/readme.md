@@ -214,21 +214,29 @@ OUT a, b, c, d;
 ```c++
 if sel == 00
     {a, b, c, d} = {in, 0, 0, 0}
-else if sel == 00
+else if sel == 01
     {a, b, c, d} = {0, in, 0, 0}
-else if sel == 00
+else if sel == 10
     {a, b, c, d} = {0, 0, in, 0}
-else if sel == 00
+else if sel == 11
     {a, b, c, d} = {0, 0, 0, in}
 ```
 
 - 8-way Demultiplexer
 
 ```c++
-IN in[8];
-OUT out;
+IN in, sel[3];
+OUT a, b, c, d, e, f, g, h;
 ```
 
 ```c++
-out = (in[0] or in[1] or ... or in[7])
+if sel == 000
+    {a, b, c, d, e, f, g, h} = {in, 0, 0, 0, 0, 0, 0, 0}
+else if sel == 001
+    {a, b, c, d, e, f, g, h} = {0, in, 0, 0, 0, 0, 0, 0}
+
+...
+
+else if sel == 111
+    {a, b, c, d, e, f, g, h} = {0, 0, 0, 0, 0, 0, 0, in}
 ```
