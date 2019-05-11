@@ -28,7 +28,7 @@ Build the following chips:
 - DMux4Way
 - DMux8Way
 
-Described [here](//nand2tetris.org/01.php) and in `projects/01/readme.md`.
+Described [on the nand2tetris website](//nand2tetris.org/01.php) and in [`projects/01/readme.md`](projects/01/readme.md).
 
 ## Project 02
 
@@ -40,7 +40,7 @@ Build the following chips:
 - Inc16
 - ALU
 
-Described [here](//nand2tetris.org/02.php) and in `projects/02/readme.md`.
+Described [on the nand2tetris website](//nand2tetris.org/02.php) and in [`projects/02/readme.md`](projects/02/readme.md).
 
 ## Project 03
 
@@ -55,13 +55,13 @@ Build the following chips:
 - RAM16K
 - PC
 
-Described [here](//nand2tetris.org/03.php) and in `projects/03/readme.md`.
+Described [on the nand2tetris website](//nand2tetris.org/03.php) and in [`projects/03/readme.md`](projects/03/readme.md).
 
 ## Project 04
 
 Write `Mult.asm` and `Fill.asm` to familiarize oneself with the assembly language.
 
-Described [here](//nand2tetris.org/04.php).
+Described [on the nand2tetris website](//nand2tetris.org/04.php) and in [`projects/03/readme.md`](projects/04/readme.md).
 
 
 ## Project 05
@@ -72,10 +72,10 @@ Build the following chips:
 - CPU
 - Computer
 
-Described [here](//nand2tetris.org/05.php) and in `projects/05/readme.md`.
+Described [on the nand2tetris website](//nand2tetris.org/05.php) and in [`projects/05/readme.md`](projects/05/readme.md).
 
 ## Project 06
 
 Write an assembler in a language of one's choice to convert the described assembly language to binary code as described by the specification [here](//nand2tetris.org/06.php).
 
-Find usage instructions in `projects/06/readme.md` and documentation in `projects/06/HackAssembler/docs`.
+Find usage instructions in [`projects/06/readme.md`](projects/06/readme.md) and documentation in [`projects/06/HackAssembler/docs`](projects/06/HackAssembler/docs).
